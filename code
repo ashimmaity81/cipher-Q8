@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+char getChar(const string &s, int index) {
+    return index < s.size() ? s[index] : '\0';
+}
+void countingSort(vector<string> &arr, int index) {
+    const int ALPHABET_SIZE = 26;
+    vector<string> output(arr.size());
+    vector<int> count(ALPHABET_SIZE, 0);
+    for (const string &s : arr) {
+        count[getChar(s, index) - 'a']++;
+    }
+    for (int i = 1; i < ALPHABET_SIZE; i++) {
+        count[i] += count[i - 1];
+    }
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        output[count[getChar(arr[i], index) - 'a'] - 1] = arr[i];
+        count[getChar(arr[i], index) - 'a']--;
+    }
+    arr = output;
+}
+void radixSort(vector<string> &arr) {
+    if (arr.empty()) return;
+    int stringLength = arr[0].size();
+    for (int i = stringLength - 1; i >= 0; i--) {
+        countingSort(arr, i);
+    }
+}
+int main() {
+    int N;
+    cout << "N = ";
+    cin >> N;
+    
+    vector<string> arr(N);
+    cout << "arr = " ;
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+    radixSort(arr);
+    cout << "Output : ";
+    for (const string &s : arr) {
+        cout << "\"" << s << "\" ";
+    }
+    cout << endl;
+    return 0;
+}
